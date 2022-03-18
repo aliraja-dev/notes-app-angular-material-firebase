@@ -1,0 +1,32 @@
+<div class="wrapper">
+  <mat-toolbar>
+    <div class="title">
+      <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <input type="tel" matInput placeholder="add title">
+          <mat-icon matSuffix>mode_edit</mat-icon>
+        </mat-form-field>
+      </form>
+    </div>
+
+
+    <div class="actions">
+      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+        <mat-icon>share</mat-icon>
+      </button>
+      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <form class="example-form" *ngIf="searchClicked">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <input type="tel" matInput placeholder="search this note">
+        </mat-form-field>
+      </form>
+      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon"
+        (click)="onSearchClicked()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+  <textarea rows="40"></textarea>
+</div>
