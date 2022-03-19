@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
 export interface Section {
   name: string;
   updated: Date;
@@ -34,9 +36,14 @@ export class ListComponent implements OnInit {
       updated: new Date('1/18/16'),
     },
   ];
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
+
+  onTitleClicked() {
+    this.router.navigate(['home', 'edit', '123'])
+  }
+
 
 }

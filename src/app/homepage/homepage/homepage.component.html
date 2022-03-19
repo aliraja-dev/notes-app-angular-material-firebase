@@ -1,4 +1,9 @@
-<div fxLayout.gt-xs="row" fxFill fxLayoutAlign.gt-md="stretch">
-  <app-list fxFlex.gt-xs="25"></app-list>
-  <app-editor fxFlex.gt-xs="75"></app-editor>
+<div class="wrapper">
+  home comp
+  <div class="sidebar">
+    <app-list></app-list>
+  </div>
+  <div class="editor">
+    <router-outlet></router-outlet>
+  </div>
 </div>
