@@ -5,6 +5,12 @@ export class AuthService {
   constructor() { }
 
   //TODO add angular fire here and then do the auth using that here
+  login() {
 
+  }
+
+  logout() {
+
+  }
 }
 

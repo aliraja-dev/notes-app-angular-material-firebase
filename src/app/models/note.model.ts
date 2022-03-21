@@ -3,9 +3,7 @@ export class Note {
     public title: string,
     public body: string,
     public uid: string,
-    public authorID: string
-
-
+    public authorId: string
   ) { }
 }
 
