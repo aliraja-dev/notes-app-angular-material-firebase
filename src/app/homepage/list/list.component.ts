@@ -23,7 +23,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.notes$.subscribe(notes => {
-      console.log("notes: ", notes)
       this.notes = [...notes]
     }
     )

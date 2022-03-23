@@ -41,8 +41,7 @@ export class AppState {
 
   @Action(LoginUser)
   LoginUser({ patchState }: StateContext<AppStateModel>, { payload }: LoginUser) {
-
-    this.as.login();
+    console.log('user logged in ', payload)
     patchState({ user: { ...payload } });
   }
 
@@ -64,7 +63,6 @@ export class AppState {
     this.ns.CreateNote(payload).then(
       res => {
         patchState({ notes: [...state.notes, { ...payload, uid: res.id }] })
-        console.log(res)
       }
     ).catch(e => console.log(e))
   }
