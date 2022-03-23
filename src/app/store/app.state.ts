@@ -59,10 +59,14 @@ export class AppState {
 
   //* This action first creates the note on firebase and then update the state using the patchState method with the new note as well
   @Action(CreateNote)
-  createNote({ getState, patchState }: StateContext<AppStateModel>, { payload }: CreateNote) {
+  createNote({ getState, patchState, dispatch }: StateContext<AppStateModel>, { payload }: CreateNote) {
     const state = getState();
-    patchState({ notes: [...state.notes, payload] });
-    this.ns.CreateNote(payload);
+    this.ns.CreateNote(payload).then(
+      res => {
+        patchState({ notes: [...state.notes, { ...payload, uid: res.id }] })
+        console.log(res)
+      }
+    ).catch(e => console.log(e))
   }
 
   //* This action fetches single note from the Firestore
@@ -74,23 +78,29 @@ export class AppState {
   }
 
   @Action(UpdateNote)
-  updateNote({ patchState, getState }: StateContext<AppStateModel>, { payload }: UpdateNote) {
+  updateNote({ patchState, getState, dispatch }: StateContext<AppStateModel>, { payload }: UpdateNote) {
     const state = getState();
+    //TODO match the note, and then update it with the payload title and body
+    const withoutUpdatedNoteState = state.notes.filter(note => note.uid != payload.uid);
     console.log("payload in state", payload.uid)
     this.ns.updateNote(payload).then(
-      _ => patchState({ notes: [...state.notes, payload] })
+      _ => patchState({ notes: [...withoutUpdatedNoteState, payload] })
     ).catch(error => console.log(error));
+
+
   }
 
 
   @Action(DeleteNote)
-  deleteNote({ patchState, getState }: StateContext<AppStateModel>, uid: string) {
+  deleteNote({ patchState, getState, dispatch }: StateContext<AppStateModel>, { uid }: DeleteNote) {
     const state = getState();
     //* filter the note from local state
     const modifiedNoteState = state.notes.filter(note => note.uid != uid)
     this.ns.deleteNote(uid).then(_ =>
       patchState({ notes: [...modifiedNoteState] })
     ).catch(e => console.log(e))
+    //* after deleting the note, the noteSelected state is set to empty
+    return dispatch(new NoteSelected({ title: '', body: '', uid: '' }))
   }
 
   @Action(GetAllNotes)

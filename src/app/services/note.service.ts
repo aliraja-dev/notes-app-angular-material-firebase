@@ -17,7 +17,7 @@ export class NoteService {
   CreateNote(payload: Note) {
     //TODO add here the firestore create post method and then return the Id for the note added, that id needs to be added on the user document as well on the firestore and the store as well.
     console.log("create note called", payload);
-    this.notesCollectionRef.add(payload);
+    return this.notesCollectionRef.add(payload);
   }
 
 

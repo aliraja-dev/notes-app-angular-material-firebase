@@ -1,13 +1,8 @@
 <mat-toolbar>
-  <button mat-icon-button (click)="onCreate()" class="example-icon" aria-label="Example icon-button with menu icon">
-    <mat-icon>add</mat-icon>
-  </button>
 </mat-toolbar>
 <mat-list>
-
-
   <div mat-subheader>Notes</div>
   <mat-list-item *ngFor="let note of notes; let i =index" (click)="openNote(note.uid)">
-    <div mat-line>{{note.title}}</div>
+    <div mat-line class="i">{{note.title}}</div>
   </mat-list-item>
 </mat-list>

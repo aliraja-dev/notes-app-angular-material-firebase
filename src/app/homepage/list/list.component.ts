@@ -1,12 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable, Subscription } from 'rxjs';
 
 import { Note } from 'src/app/interfaces/note.interface';
 import { NoteSelected } from 'src/app/store/app.actions';
+import { AppStateModel } from 'src/app/store/app.state';
 
 @Component({
   selector: 'app-list',
+
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
@@ -20,7 +22,11 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.notes$.subscribe(notes => this.notes = notes)
+    this.notes$.subscribe(notes => {
+      console.log("notes: ", notes)
+      this.notes = [...notes]
+    }
+    )
   }
 
   onCreate() {

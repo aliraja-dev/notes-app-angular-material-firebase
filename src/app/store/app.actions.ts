@@ -19,7 +19,7 @@ export class UpdateNote {
 
 export class DeleteNote {
   static readonly type = "[Note] Delete"
-  constructor(public id: string) { }
+  constructor(public uid: string) { }
 }
 
 export class GetAllNotes {

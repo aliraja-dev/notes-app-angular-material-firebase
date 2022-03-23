@@ -1,32 +1,26 @@
-<form (ngSubmit)="onSubmit()" #f="ngForm" class="wrapper">
+<form #f="ngForm" class="wrapper">
   <mat-toolbar>
     <div class="title" *ngIf="note">
       <mat-form-field class="example-full-width" appearance="fill">
-        <input type="tel" matInput placeholder="add title" ngModel name="title" [value]="note.title">
-        <mat-icon matSuffix>mode_edit</mat-icon>
+        <input type="tel" matInput placeholder="add title for note" ngModel name="title" [value]="note.title">
       </mat-form-field>
     </div>
     <div class="actions">
-      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon" type="submit">
+      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon" (click)="onSave()">
         <mat-icon>save</mat-icon>
       </button>
-      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-        <mat-icon>share</mat-icon>
-      </button>
+
       <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon"
         (click)="onDelete()">
         <mat-icon>delete</mat-icon>
       </button>
 
-      <mat-form-field class="example-full-width" appearance="fill">
-        <input type="tel" matInput placeholder="search this note">
-      </mat-form-field>
-
-      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon"
-        (click)="onSearchClicked()">
-        <mat-icon>search</mat-icon>
+      <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon"
+        (click)="onNewNote()">
+        <mat-icon>add</mat-icon>
       </button>
     </div>
   </mat-toolbar>
-  <textarea *ngIf="note" ngModel name="body" rows="40" [value]="note.body"></textarea>
+  <textarea *ngIf="note" ngModel name="body" rows="40" [value]="note.body" placeholder="add new note"></textarea>
+
 </form>

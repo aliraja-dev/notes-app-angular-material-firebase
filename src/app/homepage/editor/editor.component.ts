@@ -5,7 +5,7 @@ import { Store } from '@ngxs/store';
 import { Observable, Subscription } from 'rxjs';
 
 import { Note } from 'src/app/interfaces/note.interface';
-import { CreateNote, DeleteNote, UpdateNote } from 'src/app/store/app.actions';
+import { CreateNote, DeleteNote, NoteSelected, UpdateNote } from 'src/app/store/app.actions';
 
 @Component({
   selector: 'app-editor',
@@ -14,8 +14,6 @@ import { CreateNote, DeleteNote, UpdateNote } from 'src/app/store/app.actions';
 })
 export class EditorComponent implements OnInit, OnDestroy {
   @ViewChild('f', { static: false }) form!: NgForm;
-  searchClicked = false;
-
   selectedNote$: Observable<Note>;
   note: Note;
   selectedNoteSub: Subscription;
@@ -27,11 +25,12 @@ export class EditorComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.selectedNote$.subscribe(note => this.note = note);
   }
-  onSearchClicked() {
-    this.searchClicked = !this.searchClicked
+
+  onNewNote() {
+    this.store.dispatch(new NoteSelected({ title: '', body: '', uid: '' }))
   }
 
-  onSubmit() {
+  onSave() {
     const note = { title: this.form.value.title, body: this.form.value.body, uid: this.note.uid }
 
     //* check if uid exists, true Dispatch UpdateNote Action
@@ -40,16 +39,20 @@ export class EditorComponent implements OnInit, OnDestroy {
       this.store.dispatch(new UpdateNote(note));
       return;
     }
+    if (note.title) {
+      //* if there is a title only then create a new note
+      console.log('UID doesnt exist, save new note');
+      this.store.dispatch(new CreateNote(
+        note
+      ))
 
-    console.log('UID doesnt exist, save new note');
-    this.store.dispatch(new CreateNote(
-      note
-    ))
+    }
+
   }
 
   //* Delete the note
   onDelete() {
-    this.store.dispatch(new DeleteNote(this.note.uid!))
+    this.store.dispatch(new DeleteNote(this.note.uid))
   }
 
   ngOnDestroy(): void {

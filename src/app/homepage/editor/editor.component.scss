@@ -5,15 +5,14 @@ mat-form-field {
 .wrapper {
   display: flex;
   flex-direction: column;
-
-  textarea {
-    flex: auto;
-    align-items: stretch;
-  }
   mat-toolbar {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+  }
+  textarea {
+    flex: auto;
+    align-items: stretch;
   }
 }
 
