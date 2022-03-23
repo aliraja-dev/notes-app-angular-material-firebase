@@ -22,6 +22,11 @@ export class DeleteNote {
   constructor(public id: string) { }
 }
 
+export class GetAllNotes {
+  static readonly type = "[Note] Get All"
+  constructor(public payload: Note[]) { }
+}
+
 //* USER AUTHENTICATION ACTIONS
 export class LoginUser {
   static readonly type = "[User] Login"
@@ -31,4 +36,12 @@ export class LoginUser {
 export class LogoutUser {
   static readonly type = "[User] Logout User"
   constructor(public uid: string) { }
+}
+
+
+//* NOTE SELECTION STATE
+
+export class NoteSelected {
+  static readonly type = "[Note] Note Selected";
+  constructor(public payload: Note) { }
 }

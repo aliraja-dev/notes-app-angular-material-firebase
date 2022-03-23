@@ -1,49 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { Observable, Subscription } from 'rxjs';
 
-export interface Section {
-  name: string;
-  updated: Date;
-}
+import { Note } from 'src/app/interfaces/note.interface';
+import { NoteSelected } from 'src/app/store/app.actions';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit {
-  folders: Section[] = [
-    {
-      name: 'Photos',
-      updated: new Date('1/1/16'),
-    },
-    {
-      name: 'Recipes',
-      updated: new Date('1/17/16'),
-    },
-    {
-      name: 'Work',
-      updated: new Date('1/28/16'),
-    },
-  ];
-  notes: Section[] = [
-    {
-      name: 'Vacation Itinerary',
-      updated: new Date('2/20/16'),
-    },
-    {
-      name: 'Kitchen Remodel',
-      updated: new Date('1/18/16'),
-    },
-  ];
-  constructor(private router: Router) { }
+export class ListComponent implements OnInit, OnDestroy {
+  notes$: Observable<Note[]>;
+  notes: Note[] = [];
+  notesSub: Subscription;
+
+  constructor(private store: Store) {
+    this.notes$ = this.store.select(state => state.AppState.notes)
+  }
 
   ngOnInit(): void {
+    this.notes$.subscribe(notes => this.notes = notes)
   }
 
-  onTitleClicked() {
-    this.router.navigate(['home', 'edit', '123'])
+  onCreate() {
+
   }
-
-
+  openNote(uid: string | undefined) {
+    const arrayWithSelectedNote = this.notes.filter(note => note.uid == uid)
+    let selectedNote;
+    arrayWithSelectedNote.map(note =>
+      this.store.dispatch(new NoteSelected(note))
+    )
+  }
+  ngOnDestroy(): void {
+    this.notesSub.unsubscribe();
+  }
 }

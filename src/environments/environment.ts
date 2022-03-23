@@ -4,12 +4,12 @@
 
 export const environment = {
   firebase: {
-    projectId: 'note-app-433aa',
-    appId: '1:967649480472:web:30ffd039ebcfc179c1586d',
-    storageBucket: 'note-app-433aa.appspot.com',
-    apiKey: 'AIzaSyDNmDGq8wognlA4dHBkkdgzqsUt8q_i5G4',
-    authDomain: 'note-app-433aa.firebaseapp.com',
-    messagingSenderId: '967649480472',
+    apiKey: "AIzaSyDZQGqh4tSgjCnwmU2BZwb1oAk_GIdw5ug",
+    authDomain: "note-app-3fb72.firebaseapp.com",
+    projectId: "note-app-3fb72",
+    storageBucket: "note-app-3fb72.appspot.com",
+    messagingSenderId: "768600795887",
+    appId: "1:768600795887:web:d2cf0da2b9eea34e13891a"
   },
   production: false
 };

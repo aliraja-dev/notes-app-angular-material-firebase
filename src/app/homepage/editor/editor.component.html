@@ -1,35 +1,32 @@
-<div class="wrapper">
+<form (ngSubmit)="onSubmit()" #f="ngForm" class="wrapper">
   <mat-toolbar>
-    <div class="title">
-      <form class="example-form">
-        <mat-form-field class="example-full-width" appearance="fill">
-          <input type="tel" matInput placeholder="add title">
-          <mat-icon matSuffix>mode_edit</mat-icon>
-        </mat-form-field>
-      </form>
+    <div class="title" *ngIf="note">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <input type="tel" matInput placeholder="add title" ngModel name="title" [value]="note.title">
+        <mat-icon matSuffix>mode_edit</mat-icon>
+      </mat-form-field>
     </div>
-
-
     <div class="actions">
-      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon" type="submit">
         <mat-icon>save</mat-icon>
       </button>
       <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
         <mat-icon>share</mat-icon>
       </button>
-      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon"
+        (click)="onDelete()">
         <mat-icon>delete</mat-icon>
       </button>
-      <form class="example-form" *ngIf="searchClicked">
-        <mat-form-field class="example-full-width" appearance="fill">
-          <input type="tel" matInput placeholder="search this note">
-        </mat-form-field>
-      </form>
+
+      <mat-form-field class="example-full-width" appearance="fill">
+        <input type="tel" matInput placeholder="search this note">
+      </mat-form-field>
+
       <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon"
         (click)="onSearchClicked()">
         <mat-icon>search</mat-icon>
       </button>
     </div>
   </mat-toolbar>
-  <textarea rows="40">This is editor comp</textarea>
-</div>
+  <textarea *ngIf="note" ngModel name="body" rows="40" [value]="note.body"></textarea>
+</form>

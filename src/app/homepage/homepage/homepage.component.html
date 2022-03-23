@@ -1,9 +1,5 @@
 <div class="wrapper">
-  home comp
-  <div class="sidebar">
-    <app-list></app-list>
-  </div>
-  <div class="editor">
-    <router-outlet></router-outlet>
-  </div>
+  <app-list class="sidebar"></app-list>
+  <!-- <app-empty *ngIf="selectedNote"></app-empty> -->
+  <app-editor class="editor"></app-editor>
 </div>

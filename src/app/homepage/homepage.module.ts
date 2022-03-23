@@ -5,21 +5,23 @@ import { ListComponent } from './list/list.component';
 import { EditorComponent } from './editor/editor.component';
 import { RouterModule, Routes } from '@angular/router';
 import { MaterialModule } from '../shared/shared.module';
+import { EmptyComponent } from './empty/empty.component';
 
 const routes: Routes = [
   {
-    path: '', component: HomepageComponent, children: [
-
-      { path: '', component: EditorComponent },
-      { path: 'edit/:id', component: EditorComponent }
-
-    ]
+    path: '', component: HomepageComponent,
+    // children: [
+    //   // { path: '', component: EmptyComponent },
+    //   // { path: 'new', component: EditorComponent },
+    //   // { path: 'edit/:id', component: EditorComponent }
+    // ]
   },
 
 ]
 
 @NgModule({
   declarations: [
+    EmptyComponent,
     HomepageComponent,
     ListComponent,
     EditorComponent

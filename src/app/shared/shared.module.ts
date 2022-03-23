@@ -8,6 +8,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 const modules = [
   FlexLayoutModule,
@@ -17,7 +18,8 @@ const modules = [
   MatListModule,
   MatFormFieldModule,
   TextFieldModule,
-  MatInputModule
+  MatInputModule,
+  FormsModule
 
 ]
 

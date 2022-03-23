@@ -2,8 +2,8 @@ export class Note {
   constructor(
     public title: string,
     public body: string,
-    public uid: string,
-    public authorId: string
+    public uid?: string,
+    public authorId?: string
   ) { }
 }
 

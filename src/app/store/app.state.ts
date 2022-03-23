@@ -1,8 +1,8 @@
-import { State, Action, StateContext, Selector, actionMatcher } from "@ngxs/store";
+import { State, Action, StateContext, Selector, actionMatcher, Select } from "@ngxs/store";
 
 import { User } from "../interfaces/user.interface";
 import { Note } from "../interfaces/note.interface";
-import { DeleteNote, FetchNote, LoginUser, LogoutUser, UpdateNote } from "./app.actions";
+import { DeleteNote, FetchNote, GetAllNotes, LoginUser, LogoutUser, NoteSelected, UpdateNote } from "./app.actions";
 import { AuthService } from "../services/auth.service";
 import { NoteService } from "../services/note.service";
 import { CreateNote } from "./app.actions";
@@ -10,11 +10,17 @@ import { Injectable } from "@angular/core";
 
 export interface AppStateModel {
   user: User;
-  notes: Note[]
+  notes: Note[],
+  selectedNote: Note;
 }
 
 @State<AppStateModel>({
   name: 'AppState',
+  defaults: {
+    user: {},
+    notes: [],
+    selectedNote: { title: '', body: '', uid: '' }
+  }
 })
 @Injectable()
 export class AppState {
@@ -22,6 +28,12 @@ export class AppState {
     private as: AuthService,
     private ns: NoteService
   ) { }
+
+  //* Get All Notes for the User
+  @Selector()
+  static getNotes(state: AppStateModel) {
+    return state.notes;
+  }
 
   //* ACTIONS METHODS
 
@@ -48,41 +60,49 @@ export class AppState {
   //* This action first creates the note on firebase and then update the state using the patchState method with the new note as well
   @Action(CreateNote)
   createNote({ getState, patchState }: StateContext<AppStateModel>, { payload }: CreateNote) {
-    this.ns.CreateNote();
-
     const state = getState();
-    patchState({ notes: [...state.notes, payload] })
-
+    patchState({ notes: [...state.notes, payload] });
+    this.ns.CreateNote(payload);
   }
 
   //* This action fetches single note from the Firestore
   @Action(FetchNote)
   fetchNote({ getState, patchState }: StateContext<AppStateModel>, uid: string) {
     const note = this.ns.fetchNote(uid);
-
     const state = getState();
-    patchState({ notes: [...state.notes, note] })
-
+    patchState({ notes: [] })
   }
 
   @Action(UpdateNote)
   updateNote({ patchState, getState }: StateContext<AppStateModel>, { payload }: UpdateNote) {
     const state = getState();
-    this.ns.updateNote();
-    //TODO update the note on firestore, and then inside the local store update the specific note only. using filter or something and patch it.
-
-    patchState({ notes: [...state.notes], })
+    console.log("payload in state", payload.uid)
+    this.ns.updateNote(payload).then(
+      _ => patchState({ notes: [...state.notes, payload] })
+    ).catch(error => console.log(error));
   }
+
+
   @Action(DeleteNote)
   deleteNote({ patchState, getState }: StateContext<AppStateModel>, uid: string) {
-
     const state = getState();
-
-    //TODO send req to delete note from firestore and then also update the local state too
-
-    patchState({ notes: [...state.notes] })
+    //* filter the note from local state
+    const modifiedNoteState = state.notes.filter(note => note.uid != uid)
+    this.ns.deleteNote(uid).then(_ =>
+      patchState({ notes: [...modifiedNoteState] })
+    ).catch(e => console.log(e))
   }
 
+  @Action(GetAllNotes)
+  getAllNotes({ patchState, getState }: StateContext<AppStateModel>, { payload }: GetAllNotes) {
+    const state = getState();
+    patchState({ notes: [...state.notes, ...payload] })
+  }
 
+  //* NOTE SELECTED
+  @Action(NoteSelected)
+  noteSelected({ patchState }: StateContext<AppStateModel>, { payload }: NoteSelected) {
+    patchState({ selectedNote: payload })
+  }
 }
 

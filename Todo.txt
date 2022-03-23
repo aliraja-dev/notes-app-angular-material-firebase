@@ -1,0 +1,17 @@
+todo next steps
+
+Add a note
+dispatch action to state from their to service and save to firestore
+leave auth for a while and just setup note actions
+
+then read from firestore
+
+CURD of notes
+
+auth Add
+
+sub collections of notes search feature
+
+angular fire docs
+
+stuff
