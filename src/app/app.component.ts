@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 import { Store } from '@ngxs/store';
-import { take } from 'rxjs';
+import { switchMap, take, tap } from 'rxjs';
 
 import { NoteService } from './services/note.service';
 import { GetAllNotes, LoginUser } from './store/app.actions';
@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
     this.ns.getAll().pipe(take(1)).subscribe(notes => {
       this.store.dispatch(new GetAllNotes(notes));
     });
-
+    this.loadUserInAppState().pipe(take(1)).subscribe();
   }
 
 
@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
       //* authenticated user
       //TODO load this user into our Store
       userData => {
-        this.loadUserInAppState();
+        this.loadUserInAppState().pipe(take(1)).subscribe();
       }
     ).catch(error => console.log(error))
   }
@@ -47,15 +47,21 @@ export class AppComponent implements OnInit {
   }
 
   loadUserInAppState() {
-    const user = firebase.auth().currentUser;
-    const userForState: User = {
-      name: user?.displayName,
-      email: user?.email,
-      pictureUrl: user?.photoURL,
-      uid: user?.uid
-    }
 
-    this.store.dispatch(new LoginUser(userForState))
+    return this.auth.authState.pipe(
+      tap((user) => {
 
+        if (user) {
+          console.log('user logged in', user)
+          const userForState: User = {
+            name: user.displayName,
+            email: user.email,
+            pictureUrl: user.photoURL,
+            uid: user?.uid
+          }
+          this.store.dispatch(new LoginUser(userForState))
+        }
+      })
+    )
   }
 }
