@@ -27,32 +27,39 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   onNewNote() {
-    this.store.dispatch(new NoteSelected({ title: '', body: '', uid: '' }))
+    this.store.dispatch(new NoteSelected({ title: '', body: '', userId: '' }))
   }
 
   onSave() {
-    const note = { title: this.form.value.title, body: this.form.value.body, uid: this.note.uid }
+    const note = { title: this.form.value.title, body: this.form.value.body }
 
     //* check if uid exists, true Dispatch UpdateNote Action
     if (!!this.note.uid) {
       console.log('UID exists', this.note.uid);
-      this.store.dispatch(new UpdateNote(note));
+
+      this.store.dispatch(new UpdateNote({ ...note, uid: this.note.uid }));
       return;
     }
     if (note.title) {
       //* if there is a title only then create a new note
       console.log('UID doesnt exist, save new note');
+
       this.store.dispatch(new CreateNote(
         note
       ))
 
+    } else {
+      //TODO update Ui with error
+      console.log("please enter a title to save the note");
     }
 
   }
 
   //* Delete the note
   onDelete() {
-    this.store.dispatch(new DeleteNote(this.note.uid))
+    if (this.note.uid) {
+      this.store.dispatch(new DeleteNote(this.note.uid))
+    }
   }
 
   ngOnDestroy(): void {

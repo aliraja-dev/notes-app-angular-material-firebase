@@ -58,10 +58,11 @@ export class AppState {
 
   //* This action first creates the note on firebase and then update the state using the patchState method with the new note as well
   @Action(CreateNote)
-  createNote({ getState, patchState, dispatch }: StateContext<AppStateModel>, { payload }: CreateNote) {
+  createNote({ getState, patchState }: StateContext<AppStateModel>, { payload }: CreateNote) {
     const state = getState();
     this.ns.CreateNote(payload).then(
       res => {
+        console.log(res);
         patchState({ notes: [...state.notes, { ...payload, uid: res.id }] })
       }
     ).catch(e => console.log(e))
@@ -76,7 +77,7 @@ export class AppState {
   }
 
   @Action(UpdateNote)
-  updateNote({ patchState, getState, dispatch }: StateContext<AppStateModel>, { payload }: UpdateNote) {
+  updateNote({ patchState, getState }: StateContext<AppStateModel>, { payload }: UpdateNote) {
     const state = getState();
     //TODO match the note, and then update it with the payload title and body
     const withoutUpdatedNoteState = state.notes.filter(note => note.uid != payload.uid);
