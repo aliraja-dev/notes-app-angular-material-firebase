@@ -1,4 +1,4 @@
-import { State, Action, StateContext, Selector, actionMatcher, Select } from "@ngxs/store";
+import { State, Action, StateContext, Selector } from "@ngxs/store";
 
 import { User } from "../interfaces/user.interface";
 import { Note } from "../interfaces/note.interface";
@@ -8,10 +8,11 @@ import { NoteService } from "../services/note.service";
 import { CreateNote } from "./app.actions";
 import { Injectable } from "@angular/core";
 
+
 export interface AppStateModel {
-  user: User;
-  notes: Note[],
-  selectedNote: Note;
+  user: User | null;
+  notes: Note[];
+  selectedNote: Note | null;
 }
 
 @State<AppStateModel>({
@@ -41,17 +42,16 @@ export class AppState {
 
   @Action(LoginUser)
   LoginUser({ patchState }: StateContext<AppStateModel>, { payload }: LoginUser) {
-    console.log('user logged in ', payload)
+
     patchState({ user: { ...payload } });
   }
 
 
   //* Use authService to log user out
   @Action(LogoutUser)
-  LogoutUser({ patchState, getState }: StateContext<AppStateModel>, uid: string) {
-    this.as.logout();
-    const state = getState();
-    patchState({ user: { ...state.user, isAuthenticated: false } });
+  LogoutUser({ patchState }: StateContext<AppStateModel>) {
+    console.log("logout action ")
+    patchState({ user: {}, notes: [] });
   }
 
   //* Actions for Note CRUD
@@ -60,12 +60,14 @@ export class AppState {
   @Action(CreateNote)
   createNote({ getState, patchState }: StateContext<AppStateModel>, { payload }: CreateNote) {
     const state = getState();
-    this.ns.CreateNote(payload).then(
-      res => {
-        console.log(res);
-        patchState({ notes: [...state.notes, { ...payload, uid: res.id }] })
-      }
-    ).catch(e => console.log(e))
+    if (state.notes != null) {
+      this.ns.CreateNote(payload).then(
+        res => {
+          console.log(res);
+          patchState({ notes: [...state.notes, { ...payload, uid: res.id }] })
+        }
+      ).catch(e => console.log(e))
+    }
   }
 
   //* This action fetches single note from the Firestore
@@ -80,11 +82,14 @@ export class AppState {
   updateNote({ patchState, getState }: StateContext<AppStateModel>, { payload }: UpdateNote) {
     const state = getState();
     //TODO match the note, and then update it with the payload title and body
-    const withoutUpdatedNoteState = state.notes.filter(note => note.uid != payload.uid);
+    if (state.notes) {
+      const withoutUpdatedNoteState = state.notes.filter(note => note.uid != payload.uid);
+      this.ns.updateNote(payload).then(
+        _ => patchState({ notes: [...withoutUpdatedNoteState, payload] })
+      ).catch(error => console.log(error));
+    }
     console.log("payload in state", payload.uid)
-    this.ns.updateNote(payload).then(
-      _ => patchState({ notes: [...withoutUpdatedNoteState, payload] })
-    ).catch(error => console.log(error));
+
 
 
   }
@@ -94,18 +99,22 @@ export class AppState {
   deleteNote({ patchState, getState, dispatch }: StateContext<AppStateModel>, { uid }: DeleteNote) {
     const state = getState();
     //* filter the note from local state
-    const modifiedNoteState = state.notes.filter(note => note.uid != uid)
-    this.ns.deleteNote(uid).then(_ =>
-      patchState({ notes: [...modifiedNoteState] })
-    ).catch(e => console.log(e))
-    //* after deleting the note, the noteSelected state is set to empty
-    return dispatch(new NoteSelected({ title: '', body: '', uid: '' }))
+    if (state.notes) {
+      const modifiedNoteState = state.notes.filter(note => note.uid != uid)
+      this.ns.deleteNote(uid).then(_ =>
+        patchState({ notes: [...modifiedNoteState] })
+      ).catch(e => console.log(e))
+      //* after deleting the note, the noteSelected state is set to empty
+      return dispatch(new NoteSelected({ title: '', body: '', uid: '' }))
+    } else { return }
   }
 
   @Action(GetAllNotes)
   getAllNotes({ patchState, getState }: StateContext<AppStateModel>, { payload }: GetAllNotes) {
     const state = getState();
-    patchState({ notes: [...state.notes, ...payload] })
+    if (state.notes) {
+      patchState({ notes: [...state.notes, ...payload] })
+    }
   }
 
   //* NOTE SELECTED

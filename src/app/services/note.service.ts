@@ -18,9 +18,9 @@ export class NoteService {
 
   async CreateNote(payload: Note) {
     //TODO add here the firestore create post method and then return the Id for the note added, that id needs to be added on the user document as well on the firestore and the store as well.
-    console.log("create note called", payload);
+
     const user = await this.afa.currentUser;
-    console.log(user);
+
     return this.notesCollectionRef.add({
       ...payload,
       userId: user?.uid,
@@ -52,7 +52,7 @@ export class NoteService {
       switchMap(
         user => {
           if (user) {
-            console.log("user exists", user)
+
             return this.afs.collection<Note[]>(
               '/notes', ref =>
               ref.where('userId', '==', user.uid).orderBy('createdAt')

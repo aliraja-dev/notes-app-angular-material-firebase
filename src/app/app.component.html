@@ -3,9 +3,16 @@
 
     <span>Note App</span>
     <span class="example-spacer"></span>
-    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon"
-      (click)="onLogin()">
-      <mat-icon>account_circle</mat-icon>
+    <button *ngIf="!(auth.authState | async)" mat-icon-button class="example-icon favorite-icon"
+      aria-label="Example icon-button with heart icon" (click)="onLogin()">
+      Login
+      <!-- <mat-icon>account_circle</mat-icon> -->
+    </button>
+
+    <button *ngIf="auth.authState | async as user" mat-icon-button class="example-icon favorite-icon"
+      aria-label="Example icon-button with heart icon" (click)="onLogOut()">
+      <!-- <mat-icon>account_circle</mat-icon> -->
+      Logout
     </button>
 
   </mat-toolbar>

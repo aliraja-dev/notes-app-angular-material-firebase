@@ -35,7 +35,7 @@ export class LoginUser {
 
 export class LogoutUser {
   static readonly type = "[User] Logout User"
-  constructor(public uid: string) { }
+  constructor() { }
 }
 
 
