@@ -1,7 +1,7 @@
 <div class="container">
   <mat-toolbar>
 
-    <span>Note App</span>
+    <span routerLink="/">Note App</span>
     <span class="example-spacer"></span>
     <button *ngIf="!(auth.authState | async)" mat-icon-button class="example-icon favorite-icon"
       aria-label="Example icon-button with heart icon" (click)="onLogin()">

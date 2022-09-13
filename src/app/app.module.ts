@@ -28,12 +28,13 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    MaterialModule,
     AngularFireModule.initializeApp(environment.firebase),
     NgxsModule.forRoot([AppState], { developmentMode: !environment.production }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-    MaterialModule,
+
     NgxsLoggerPluginModule.forRoot({
       disabled: environment.production
     }),
